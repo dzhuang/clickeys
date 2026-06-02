@@ -65,7 +65,8 @@ function createWindow() {
         height: 580,
         resizable: false,
         show: !store.get('startMinimized'),
-        frame: false,
+        frame: process.platform !== 'darwin',
+        titleBarStyle: process.platform === 'darwin' ? 'hidden' : undefined,
         transparent: false,
         backgroundColor: '#1a1a2e',
         webPreferences: {
@@ -100,9 +101,18 @@ function createTray() {
     // Create a simple icon if the file doesn't exist
     let trayIcon;
     try {
-        trayIcon = nativeImage.createFromPath(iconPath);
-        if (trayIcon.isEmpty()) {
+        const image = nativeImage.createFromPath(iconPath);
+        if (image.isEmpty()) {
             trayIcon = nativeImage.createEmpty();
+        } else {
+            // Resize the high-res icon to fit the system tray/menu bar
+            if (process.platform === 'darwin') {
+                trayIcon = image.resize({ width: 18, height: 18 });
+                // Make it a template image so it matches macOS menu bar light/dark modes
+                trayIcon.setTemplateImage(true);
+            } else {
+                trayIcon = image.resize({ width: 16, height: 16 });
+            }
         }
     } catch (e) {
         trayIcon = nativeImage.createEmpty();
@@ -327,6 +337,7 @@ ipcMain.on('minimize-window', () => {
 
 // App lifecycle
 app.whenReady().then(() => {
+
     createWindow();
     createTray();
     setupKeyboardListener();
@@ -373,7 +384,7 @@ app.on('window-all-closed', () => {
 });
 
 app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
+    if (app.isReady() && BrowserWindow.getAllWindows().length === 0) {
         createWindow();
     }
 });

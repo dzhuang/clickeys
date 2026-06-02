@@ -8,6 +8,7 @@ let schemeChangedCallback = null;
 let enabledChangedCallback = null;
 
 contextBridge.exposeInMainWorld('electronAPI', {
+    isMac: process.platform === 'darwin',
     // Settings
     getSettings: () => ipcRenderer.invoke('get-settings'),
     setSetting: (key, value) => ipcRenderer.invoke('set-setting', key, value),

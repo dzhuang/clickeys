@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Check if electronAPI exists
     if (window.electronAPI) {
         console.log('electronAPI is available');
+        if (window.electronAPI.isMac) {
+            document.body.classList.add('is-mac');
+        }
         init();
     } else {
         console.error('electronAPI is NOT available!');

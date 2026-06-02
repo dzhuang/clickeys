@@ -438,3 +438,15 @@ body {
     flex-direction: column;
     gap: 15px;
 }
+
+/* macOS Title Bar Integration */
+body.is-mac .title-bar-buttons {
+    display: none;
+}
+
+body.is-mac .title-bar-drag {
+    display: flex;
+    justify-content: center;
+    margin-left: 70px;
+    margin-right: 70px;
+}
