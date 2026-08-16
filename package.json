@@ -1,6 +1,6 @@
 {
     "name": "clickeys",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Typing sound effect application for Windows and macOS",
     "main": "main.js",
     "scripts": {
